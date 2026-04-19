@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>InfiCreator — AI Marketing Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#080810;--sidebar:#0d0d18;--surface:#12121f;--surface2:#1a1a2e;--surface3:#21213a;
+  --border:#1e1e35;--border2:#2a2a45;
+  --text:#ede9ff;--text2:#8b85aa;--text3:#4a4568;
+  --accent:#7c3aed;--accent2:#9d5ff0;--accent-glow:rgba(124,58,237,.25);
+  --pink:#ec4899;--cyan:#06b6d4;--amber:#f59e0b;--green:#10b981;--red:#ef4444;
+  --meta:#1877f2;--ig1:#e1306c;--ig2:#f77737;
+  --r:10px;--rsm:7px;--rxs:5px;
+  --font:'DM Sans',system-ui,sans-serif;
+  --display:'Syne',system-ui,sans-serif;
+  --mono:'DM Mono',monospace;
+}
+html,body{height:100%;overflow:hidden}
+body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:14px}
+
+/* ── LAYOUT ── */
+.app{display:flex;height:100vh;overflow:hidden}
+.sidebar{width:220px;min-width:220px;background:var(--sidebar);border-right:0.5px solid var(--border);display:flex;flex-direction:column;height:100vh;overflow:hidden}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+
+/* ── SIDEBAR ── */
+.sb-logo{padding:18px 16px 14px;display:flex;align-items:center;gap:10px;border-bottom:0.5px solid var(--border)}
+.sb-logo-icon{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--accent),var(--pink));display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sb-logo-name{font-family:var(--display);font-size:15px;font-weight:700;letter-spacing:-.02em}
+.sb-logo-sub{font-size:9px;color:var(--text3);letter-spacing:.05em;text-transform:uppercase;margin-top:1px}
+.sb-nav{padding:12px 10px;flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:2px}
+.nav-section{font-size:9.5px;font-weight:500;letter-spacing:.08em;color:var(--text3);text-transform:uppercase;padding:10px 6px 5px;margin-top:4px}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:var(--rsm);cursor:pointer;border:0.5px solid transparent;transition:all .12s;color:var(--text2)}
+.nav-item:hover{background:var(--surface);border-color:var(--border);color:var(--text)}
+.nav-item.active{background:var(--surface2);border-color:var(--border2);color:var(--text)}
+.nav-item.active .nav-icon{color:var(--accent)}
+.nav-icon{font-size:15px;flex-shrink:0;width:18px;text-align:center}
+.nav-label{font-size:12.5px;font-weight:400}
+.nav-badge{margin-left:auto;font-size:9.5px;background:var(--accent);color:#fff;border-radius:10px;padding:1px 6px;font-weight:500}
+.sb-bottom{padding:12px;border-top:0.5px solid var(--border)}
+.sb-plan{background:linear-gradient(135deg,rgba(124,58,237,.15),rgba(236,72,153,.1));border:0.5px solid rgba(124,58,237,.3);border-radius:var(--rsm);padding:10px 12px}
+.sb-plan-title{font-size:11px;font-weight:500;color:var(--text);margin-bottom:2px}
+.sb-plan-sub{font-size:10px;color:var(--text2);line-height:1.5}
+.sb-plan-tag{display:inline-block;font-size:9px;font-weight:600;background:var(--accent);color:#fff;border-radius:4px;padding:1px 6px;margin-top:5px;letter-spacing:.04em}
+
+/* ── HEADER ── */
+.mhead{display:flex;align-items:center;justify-content:space-between;padding:13px 20px;border-bottom:0.5px solid var(--border);flex-shrink:0}
+.mh-title{font-family:var(--display);font-size:16px;font-weight:600;letter-spacing:-.02em}
+.mh-right{display:flex;align-items:center;gap:8px}
+.mh-btn{background:none;border:0.5px solid var(--border2);border-radius:var(--rsm);padding:6px 12px;cursor:pointer;font-family:var(--font);font-size:12px;color:var(--text2);transition:all .12s;display:flex;align-items:center;gap:6px}
+.mh-btn:hover{border-color:var(--accent);color:var(--text);background:var(--accent-glow)}
+.mh-btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.mh-btn.primary:hover{background:var(--accent2)}
+
+/* ── CONTENT AREA ── */
+.content{flex:1;overflow-y:auto;padding:0}
+.content::-webkit-scrollbar{width:3px}
+.content::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+.panel{display:none;padding:22px 22px}
+.panel.active{display:block}
+
+/* ── CARDS ── */
+.card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--r);padding:18px}
+.card-title{font-family:var(--display);font-size:13px;font-weight:600;letter-spacing:-.01em;margin-bottom:3px}
+.card-sub{font-size:11.5px;color:var(--text2);margin-bottom:14px;line-height:1.5}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+
+/* ── STAT CARDS ── */
+.stat-card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--r);padding:14px 16px}
+.stat-icon{width:34px;height:34px;border-radius:var(--rsm);display:flex;align-items:center;justify-content:center;margin-bottom:10px;font-size:16px}
+.stat-val{font-family:var(--display);font-size:22px;font-weight:700;letter-spacing:-.03em;line-height:1}
+.stat-label{font-size:11px;color:var(--text2);margin-top:3px}
+.stat-change{font-size:10.5px;margin-top:5px;display:flex;align-items:center;gap:3px}
+.stat-change.up{color:var(--green)}
+.stat-change.dn{color:var(--red)}
+
+/* ── FORM ELEMENTS ── */
+input,textarea,select{background:var(--surface2);border:0.5px solid var(--border2);border-radius:var(--rsm);padding:9px 12px;font-family:var(--font);font-size:13px;color:var(--text);outline:none;width:100%;transition:border-color .15s}
+input::placeholder,textarea::placeholder{color:var(--text3)}
+input:focus,textarea:focus,select:focus{border-color:var(--accent)}
+select option{background:var(--surface)}
+textarea{resize:vertical;min-height:90px;line-height:1.6}
+label{font-size:11.5px;color:var(--text2);display:block;margin-bottom:5px;font-weight:400}
+.form-group{margin-bottom:14px}
+.row{display:flex;gap:10px}
+.row .form-group{flex:1}
+
+/* ── BUTTONS ── */
+.btn{padding:8px 16px;border-radius:var(--rsm);border:none;cursor:pointer;font-family:var(--font);font-size:13px;font-weight:500;display:inline-flex;align-items:center;gap:7px;transition:all .15s}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:var(--accent2)}
+.btn-secondary{background:var(--surface2);color:var(--text2);border:0.5px solid var(--border2)}
+.btn-secondary:hover{color:var(--text);border-color:var(--border2)}
+.btn-meta{background:var(--meta);color:#fff}
+.btn-meta:hover{background:#1464cc}
+.btn-ig{background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045);color:#fff;border:none}
+.btn-sm{padding:5px 11px;font-size:12px}
+.btn-xs{padding:3px 8px;font-size:11px}
+.btn:disabled{opacity:.4;cursor:default}
+
+/* ── UPLOAD ZONE ── */
+.upload-zone{border:1.5px dashed var(--border2);border-radius:var(--r);padding:36px 20px;text-align:center;cursor:pointer;transition:all .2s;background:var(--surface)}
+.upload-zone:hover,.upload-zone.dragover{border-color:var(--accent);background:var(--accent-glow)}
+.upload-icon{font-size:36px;margin-bottom:10px}
+.upload-title{font-size:14px;font-weight:500;margin-bottom:4px}
+.upload-sub{font-size:12px;color:var(--text2)}
+.upload-tag{display:inline-block;margin-top:10px;font-size:10.5px;color:var(--text3);background:var(--surface2);border-radius:20px;padding:2px 10px;border:0.5px solid var(--border)}
+
+/* ── MEDIA GRID ── */
+.media-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-top:14px}
+.media-item{aspect-ratio:1;border-radius:var(--rsm);overflow:hidden;position:relative;border:0.5px solid var(--border);cursor:pointer;transition:all .15s}
+.media-item:hover{border-color:var(--accent)}
+.media-item img,.media-item video{width:100%;height:100%;object-fit:cover}
+.media-item-type{position:absolute;top:6px;right:6px;font-size:10px;background:rgba(0,0,0,.7);color:#fff;border-radius:4px;padding:2px 6px;font-family:var(--mono)}
+.media-item-sel{position:absolute;top:6px;left:6px;width:18px;height:18px;border-radius:50%;background:var(--accent);display:none;align-items:center;justify-content:center;font-size:10px}
+.media-item.selected .media-item-sel{display:flex}
+.media-item.selected{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-glow)}
+.media-item-actions{position:absolute;bottom:0;left:0;right:0;padding:6px;background:linear-gradient(transparent,rgba(0,0,0,.8));display:none;gap:4px}
+.media-item:hover .media-item-actions{display:flex}
+.media-action-btn{flex:1;padding:3px;background:rgba(255,255,255,.15);border:none;border-radius:3px;cursor:pointer;font-size:10px;color:#fff;text-align:center}
+
+/* ── IMAGE GENERATOR ── */
+.gen-area{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
+.gen-preview{aspect-ratio:1;background:var(--surface2);border-radius:var(--r);border:0.5px solid var(--border);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
+.gen-preview img{width:100%;height:100%;object-fit:cover}
+.gen-placeholder{text-align:center;color:var(--text3)}
+.gen-placeholder-icon{font-size:40px;margin-bottom:10px}
+.style-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:8px}
+.style-chip{padding:6px 8px;border-radius:var(--rxs);border:0.5px solid var(--border2);background:var(--surface2);cursor:pointer;font-size:11.5px;text-align:center;color:var(--text2);transition:all .12s}
+.style-chip:hover{border-color:var(--accent);color:var(--text)}
+.style-chip.active{border-color:var(--accent);background:var(--accent-glow);color:var(--accent)}
+.ratio-row{display:flex;gap:6px;margin-top:8px}
+.ratio-btn{padding:5px 10px;border-radius:var(--rxs);border:0.5px solid var(--border2);background:var(--surface2);cursor:pointer;font-family:var(--mono);font-size:11px;color:var(--text2);transition:all .12s}
+.ratio-btn.active{border-color:var(--accent);color:var(--accent);background:var(--accent-glow)}
+.loading-bar{height:2px;background:var(--border);border-radius:2px;overflow:hidden;margin-top:10px}
+.loading-bar-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--pink));border-radius:2px;transition:width .3s;width:0}
+.loading-bar-fill.animate{animation:loadbar 2s ease infinite}
+@keyframes loadbar{0%{width:0;margin-left:0}50%{width:60%;margin-left:20%}100%{width:0;margin-left:100%}}
+.gen-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.history-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:7px;margin-top:10px}
+.history-thumb{aspect-ratio:1;border-radius:var(--rxs);overflow:hidden;cursor:pointer;border:0.5px solid var(--border)}
+.history-thumb img{width:100%;height:100%;object-fit:cover}
+
+/* ── MARKETING COPY ── */
+.copy-panel{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.platform-tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.platform-tab{padding:6px 12px;border-radius:20px;border:0.5px solid var(--border2);background:none;cursor:pointer;font-family:var(--font);font-size:12px;color:var(--text2);display:flex;align-items:center;gap:6px;transition:all .12s}
+.platform-tab.active.fb{background:rgba(24,119,242,.15);border-color:rgba(24,119,242,.4);color:var(--meta)}
+.platform-tab.active.ig{background:rgba(236,72,153,.12);border-color:rgba(236,72,153,.35);color:var(--pink)}
+.platform-tab.active.tt{background:rgba(6,182,212,.12);border-color:rgba(6,182,212,.35);color:var(--cyan)}
+.platform-tab:hover{border-color:var(--border2);color:var(--text)}
+.copy-output{background:var(--surface2);border:0.5px solid var(--border2);border-radius:var(--rsm);padding:12px 14px;min-height:120px;font-size:13.5px;line-height:1.7;color:var(--text);position:relative}
+.copy-output-actions{display:flex;gap:6px;margin-top:8px}
+.hashtag-cloud{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+.hashtag{padding:3px 9px;border-radius:20px;background:var(--accent-glow);border:0.5px solid rgba(124,58,237,.3);color:var(--accent2);font-size:11.5px;cursor:pointer;font-family:var(--mono)}
+.tone-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.tone-chip{padding:5px 10px;border-radius:20px;border:0.5px solid var(--border2);background:none;cursor:pointer;font-size:11.5px;color:var(--text2);transition:all .12s}
+.tone-chip.active{border-color:var(--accent);color:var(--accent);background:var(--accent-glow)}
+
+/* ── META PUBLISHER ── */
+.meta-layout{display:grid;grid-template-columns:1fr 1.2fr;gap:18px;align-items:start}
+.preview-device{background:var(--surface2);border-radius:14px;border:0.5px solid var(--border);overflow:hidden}
+.device-bar{background:var(--surface);padding:10px 14px;display:flex;align-items:center;gap:8px;border-bottom:0.5px solid var(--border)}
+.device-dots{display:flex;gap:4px}
+.device-dot{width:8px;height:8px;border-radius:50%}
+.device-name{font-size:11px;color:var(--text3);margin-left:auto;font-family:var(--mono)}
+.fb-post{background:#18191a;padding:12px;font-size:13px}
+.fb-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--pink));display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.fb-post-header{display:flex;align-items:center;gap:9px;margin-bottom:10px}
+.fb-name{font-size:13px;font-weight:500;color:#e4e6eb}
+.fb-meta{font-size:11px;color:#b0b3b8}
+.fb-body{color:#e4e6eb;line-height:1.6;font-size:13.5px;margin-bottom:10px}
+.fb-img{width:100%;border-radius:6px;background:var(--surface3);aspect-ratio:1.91;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.fb-img img{width:100%;height:100%;object-fit:cover}
+.fb-actions{display:flex;gap:0;border-top:0.5px solid #3a3b3c;margin-top:10px;padding-top:8px}
+.fb-action-btn{flex:1;text-align:center;padding:4px;font-size:12px;color:#b0b3b8;cursor:pointer;border-radius:4px}
+.fb-action-btn:hover{background:#3a3b3c}
+.ig-post{background:#000;padding:12px}
+.ig-post-header{display:flex;align-items:center;gap:9px;margin-bottom:10px}
+.ig-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#f77737,#e1306c,#833ab4);padding:2px}
+.ig-avatar-inner{width:100%;height:100%;border-radius:50%;background:#000;display:flex;align-items:center;justify-content:center;font-size:12px}
+.ig-name{font-size:13px;font-weight:500;color:#fff}
+.ig-img{width:100%;aspect-ratio:1;background:var(--surface3);overflow:hidden}
+.ig-img img{width:100%;height:100%;object-fit:cover}
+.ig-actions{display:flex;gap:12px;padding:10px 0 6px;font-size:18px}
+.ig-caption{font-size:12.5px;color:#fff;line-height:1.5;margin-top:4px}
+.ig-hashtags{font-size:12px;color:#00b4d8;margin-top:3px}
+.platform-switcher{display:flex;gap:6px;margin-bottom:14px}
+.psw-btn{padding:6px 14px;border-radius:20px;border:0.5px solid var(--border2);background:none;cursor:pointer;font-size:12px;color:var(--text2);display:flex;align-items:center;gap:6px;transition:all .12s}
+.psw-btn.active{color:#fff}
+.psw-btn.fb.active{background:var(--meta);border-color:var(--meta)}
+.psw-btn.ig.active{background:linear-gradient(135deg,#833ab4,#fd1d1d);border-color:transparent}
+
+/* ── AUTOMATION ── */
+.flow-card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--r);padding:16px;display:flex;align-items:center;gap:14px;margin-bottom:8px;cursor:pointer;transition:all .12s}
+.flow-card:hover{border-color:var(--border2)}
+.flow-card.active-flow{border-color:var(--accent);background:var(--accent-glow)}
+.flow-icon{width:38px;height:38px;border-radius:var(--rsm);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.flow-name{font-size:13px;font-weight:500;letter-spacing:-.01em;margin-bottom:2px}
+.flow-desc{font-size:11.5px;color:var(--text2);line-height:1.4}
+.flow-status{margin-left:auto;display:flex;align-items:center;gap:5px;font-size:11px}
+.flow-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.flow-dot.on{background:var(--green);box-shadow:0 0 6px var(--green)}
+.flow-dot.off{background:var(--text3)}
+.toggle-sw{width:34px;height:18px;border-radius:10px;border:none;cursor:pointer;position:relative;transition:background .2s;flex-shrink:0}
+.toggle-sw.on{background:var(--accent)}
+.toggle-sw.off{background:var(--border2)}
+.toggle-sw::after{content:'';position:absolute;width:14px;height:14px;border-radius:50%;background:#fff;top:2px;transition:left .2s}
+.toggle-sw.on::after{left:18px}
+.toggle-sw.off::after{left:2px}
+.schedule-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:8px}
+.day-cell{text-align:center;font-size:10.5px;color:var(--text2);padding:4px}
+.time-slot{aspect-ratio:1;border-radius:4px;background:var(--surface2);cursor:pointer;transition:background .1s;border:0.5px solid transparent}
+.time-slot:hover{background:var(--accent-glow)}
+.time-slot.scheduled{background:var(--accent);opacity:.8}
+.time-slot.high{background:rgba(236,72,153,.5)}
+
+/* ── CAMPAIGN ── */
+.campaign-card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--r);padding:14px 16px;margin-bottom:8px;display:flex;align-items:center;gap:14px}
+.camp-thumb{width:46px;height:46px;border-radius:var(--rsm);overflow:hidden;flex-shrink:0;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:20px}
+.camp-thumb img{width:100%;height:100%;object-fit:cover}
+.camp-name{font-size:13px;font-weight:500}
+.camp-meta{font-size:11px;color:var(--text2);margin-top:2px}
+.camp-stats{margin-left:auto;display:flex;gap:16px;text-align:right}
+.camp-stat-val{font-family:var(--display);font-size:14px;font-weight:600}
+.camp-stat-label{font-size:10px;color:var(--text2)}
+.status-pill{padding:2px 8px;border-radius:20px;font-size:10.5px;font-weight:500}
+.status-pill.live{background:rgba(16,185,129,.15);color:var(--green);border:0.5px solid rgba(16,185,129,.3)}
+.status-pill.draft{background:rgba(245,158,11,.12);color:var(--amber);border:0.5px solid rgba(245,158,11,.25)}
+.status-pill.done{background:var(--surface2);color:var(--text3);border:0.5px solid var(--border)}
+
+/* ── PROGRESS/LOADING ── */
+.progress-ring{display:inline-block;font-size:12px;font-family:var(--mono);color:var(--accent)}
+.spinner{width:16px;height:16px;border:1.5px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;display:inline-block;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+.fade-in{animation:fi .3s ease forwards}
+@keyframes fi{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── MISC ── */
+.divider{border:none;border-top:0.5px solid var(--border);margin:16px 0}
+.tag{display:inline-flex;align-items:center;gap:4px;padding:2px 7px;border-radius:4px;font-size:10.5px;font-weight:500}
+.tag.free{background:rgba(16,185,129,.12);color:var(--green);border:0.5px solid rgba(16,185,129,.25)}
+.tag.ai{background:rgba(124,58,237,.12);color:var(--accent2);border:0.5px solid rgba(124,58,237,.25)}
+.tag.meta{background:rgba(24,119,242,.12);color:var(--meta);border:0.5px solid rgba(24,119,242,.25)}
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.section-title{font-family:var(--display);font-size:16px;font-weight:600;letter-spacing:-.02em}
+.section-sub{font-size:12px;color:var(--text2);margin-top:2px}
+.empty{text-align:center;padding:40px 20px;color:var(--text3)}
+.empty-icon{font-size:32px;margin-bottom:8px}
+.empty-text{font-size:13px}
+.ai-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 8px;border-radius:20px;font-size:10.5px;background:linear-gradient(135deg,rgba(124,58,237,.2),rgba(236,72,153,.1));border:0.5px solid rgba(124,58,237,.3);color:var(--accent2)}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:3px;height:3px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="sb-logo">
+    <div class="sb-logo-icon">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+    </div>
+    <div>
+      <div class="sb-logo-name">InfiCreator</div>
+      <div class="sb-logo-sub">AI Marketing Studio</div>
+    </div>
+  </div>
+
+  <div class="sb-nav">
+    <div class="nav-section">Create</div>
+    <div class="nav-item active" onclick="showPanel('dashboard',this)"><span class="nav-icon">⊞</span><span class="nav-label">Dashboard</span></div>
+    <div class="nav-item" onclick="showPanel('generator',this)"><span class="nav-icon">✦</span><span class="nav-label">AI Image Creator</span><span class="nav-badge">Free</span></div>
+    <div class="nav-item" onclick="showPanel('media',this)"><span class="nav-icon">⊟</span><span class="nav-label">Media Library</span></div>
+    <div class="nav-item" onclick="showPanel('copy',this)"><span class="nav-icon">✍</span><span class="nav-label">Marketing Copy</span></div>
+
+    <div class="nav-section">Publish</div>
+    <div class="nav-item" onclick="showPanel('publisher',this)"><span class="nav-icon">📡</span><span class="nav-label">Meta Publisher</span></div>
+    <div class="nav-item" onclick="showPanel('campaigns',this)"><span class="nav-icon">⚡</span><span class="nav-label">Campaigns</span></div>
+
+    <div class="nav-section">Automate</div>
+    <div class="nav-item" onclick="showPanel('automation',this)"><span class="nav-icon">🤖</span><span class="nav-label">AI Automation</span><span class="nav-badge">New</span></div>
+    <div class="nav-item" onclick="showPanel('analytics',this)"><span class="nav-icon">◈</span><span class="nav-label">Analytics</span></div>
+  </div>
+
+  <div class="sb-bottom">
+    <div class="sb-plan">
+      <div class="sb-plan-title">InfiCreator Studio</div>
+      <div class="sb-plan-sub">Open source · No API key needed · Powered by free AI models</div>
+      <div class="sb-plan-tag">100% FREE</div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="mhead">
+    <span class="mh-title" id="panel-title">Dashboard</span>
+    <div class="mh-right">
+      <span class="ai-badge"><span class="spinner"></span> AI Ready</span>
+      <button class="mh-btn primary" onclick="showPanel('generator',null)">✦ Create Now</button>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ═══ DASHBOARD ═══ -->
+    <div class="panel active" id="panel-dashboard">
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px">
+        <div class="stat-card">
+          <div class="stat-icon" style="background:rgba(124,58,237,.15);color:var(--accent)">✦</div>
+          <div class="stat-val">1,284</div>
+          <div class="stat-label">Images Created</div>
+          <div class="stat-change up">↑ 23% this week</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:rgba(24,119,242,.12);color:var(--meta)">📡</div>
+          <div class="stat-val">48</div>
+          <div class="stat-label">Posts Published</div>
+          <div class="stat-change up">↑ 8 today</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:rgba(16,185,129,.12);color:var(--green)">⚡</div>
+          <div class="stat-val">92K</div>
+          <div class="stat-label">Total Reach</div>
+          <div class="stat-change up">↑ 41% vs last</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:rgba(236,72,153,.12);color:var(--pink)">🤖</div>
+          <div class="stat-val">7</div>
+          <div class="stat-label">Active Automations</div>
+          <div class="stat-change up">All running</div>
+        </div>
+      </div>
+
+      <div class="grid2">
+        <div class="card">
+          <div class="card-title">Quick Create</div>
+          <div class="card-sub">Generate AI content in one click</div>
+          <div style="display:flex;flex-direction:column;gap:7px">
+            <button class="btn btn-primary" style="justify-content:center" onclick="showPanel('generator',null)">✦ AI Image Generator</button>
+            <button class="btn btn-secondary" style="justify-content:center" onclick="showPanel('copy',null)">✍ Marketing Copy</button>
+            <button class="btn btn-secondary" style="justify-content:center" onclick="showPanel('publisher',null)">📡 Post to Meta</button>
+            <button class="btn btn-secondary" style="justify-content:center" onclick="showPanel('media',null)">⊟ Upload Media</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Recent Activity</div>
+          <div class="card-sub">Latest AI actions</div>
+          <div style="display:flex;flex-direction:column;gap:8px;font-size:12.5px">
+            <div style="display:flex;gap:10px;align-items:center"><span style="font-size:16px">✦</span><div><div>Generated product image</div><div style="color:var(--text3);font-size:11px">2 min ago · Pollinations AI</div></div></div>
+            <div style="display:flex;gap:10px;align-items:center"><span style="font-size:16px">📡</span><div><div>Auto-posted to Facebook</div><div style="color:var(--text3);font-size:11px">15 min ago · Meta API</div></div></div>
+            <div style="display:flex;gap:10px;align-items:center"><span style="font-size:16px">✍</span><div><div>Generated 5 captions</div><div style="color:var(--text3);font-size:11px">1h ago · Claude AI</div></div></div>
+            <div style="display:flex;gap:10px;align-items:center"><span style="font-size:16px">🤖</span><div><div>Automation: Scheduled 12 posts</div><div style="color:var(--text3);font-size:11px">2h ago · AI Autopilot</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:14px">
+        <div class="section-header" style="margin-bottom:10px">
+          <div><div class="card-title">Open Source Libraries</div><div class="card-sub">Free AI tools powering InfiCreator — no API key required</div></div>
+          <a href="https://github.com/pollinations/pollinations" target="_blank" class="btn btn-secondary btn-sm">GitHub ↗</a>
+        </div>
+        <div class="grid3">
+          <div style="background:var(--surface2);border:0.5px solid var(--border2);border-radius:var(--rsm);padding:12px">
+            <div style="font-size:13px;font-weight:500;margin-bottom:3px">🎨 Pollinations.ai</div>
+            <div style="font-size:11px;color:var(--text2);line-height:1.5">Free image generation · No key needed · SDXL + FLUX models</div>
+            <div style="margin-top:6px;display:flex;gap:4px"><span class="tag free">Free</span><span class="tag ai">AI</span></div>
+          </div>
+          <div style="background:var(--surface2);border:0.5px solid var(--border2);border-radius:var(--rsm);padding:12px">
+            <div style="font-size:13px;font-weight:500;margin-bottom:3px">🤗 Transformers.js</div>
+            <div style="font-size:11px;color:var(--text2);line-height:1.5">Browser AI · Image classification · Text generation · Open source</div>
+            <div style="margin-top:6px;display:flex;gap:4px"><span class="tag free">Free</span><span class="tag ai">AI</span></div>
+          </div>
+          <div style="background:var(--surface2);border:0.5px solid var(--border2);border-radius:var(--rsm);padding:12px">
+            <div style="font-size:13px;font-weight:500;margin-bottom:3px">📡 Meta Graph API</div>
+            <div style="font-size:11px;color:var(--text2);line-height:1.5">Facebook & Instagram publishing · Scheduling · Analytics</div>
+            <div style="margin-top:6px;display:flex;gap:4px"><span class="tag meta">Meta</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ AI IMAGE GENERATOR ═══ -->
+    <div class="panel" id="panel-generator">
+      <div class="section-header">
+        <div><div class="section-title">✦ AI Image Creator</div><div class="section-sub">Free image generation · No API key · Powered by Pollinations.ai (FLUX / SDXL)</div></div>
+        <span class="tag free">100% Free</span>
+      </div>
+      <div class="gen-area">
+        <div>
+          <div class="gen-preview" id="gen-preview">
+            <div class="gen-placeholder">
+              <div class="gen-placeholder-icon">✦</div>
+              <div style="font-size:13px;font-weight:500">Image will appear here</div>
+              <div style="font-size:11px;color:var(--text3);margin-top:4px">Free · No API key needed</div>
+            </div>
+          </div>
+          <div class="loading-bar"><div class="loading-bar-fill" id="gen-bar"></div></div>
+          <div class="gen-actions" id="gen-actions" style="display:none">
+            <button class="btn btn-primary btn-sm" onclick="downloadImage()">⬇ Download</button>
+            <button class="btn btn-secondary btn-sm" onclick="saveToLibrary()">+ Library</button>
+            <button class="btn btn-secondary btn-sm" onclick="useInPost()">📡 Post to Meta</button>
+            <button class="btn btn-secondary btn-sm" onclick="generateImage()">⟳ Regenerate</button>
+          </div>
+          <div id="gen-history" style="margin-top:12px">
+            <div style="font-size:11px;color:var(--text3);margin-bottom:6px">Recent generations</div>
+            <div class="history-grid" id="history-grid"></div>
+          </div>
+        </div>
+        <div>
+          <div class="form-group">
+            <label>Prompt</label>
+            <textarea id="gen-prompt" placeholder="Describe the image you want to create… (e.g. 'A professional product photo of a luxury watch on marble, dramatic lighting, 8k quality')" style="min-height:80px"></textarea>
+          </div>
+          <div class="form-group">
+            <label>Negative Prompt (optional)</label>
+            <input type="text" id="gen-negative" placeholder="blurry, low quality, distorted, watermark…">
+          </div>
+          <div class="form-group">
+            <label>Style Preset</label>
+            <div class="style-grid">
+              <div class="style-chip active" onclick="selectStyle(this,'photorealistic')">📸 Photo</div>
+              <div class="style-chip" onclick="selectStyle(this,'digital art')">🎨 Digital Art</div>
+              <div class="style-chip" onclick="selectStyle(this,'cinematic')">🎬 Cinematic</div>
+              <div class="style-chip" onclick="selectStyle(this,'minimalist')">◽ Minimal</div>
+              <div class="style-chip" onclick="selectStyle(this,'3d render')">💎 3D Render</div>
+              <div class="style-chip" onclick="selectStyle(this,'anime')">✨ Anime</div>
+              <div class="style-chip" onclick="selectStyle(this,'oil painting')">🖼 Painting</div>
+              <div class="style-chip" onclick="selectStyle(this,'product photography')">📦 Product</div>
+              <div class="style-chip" onclick="selectStyle(this,'watercolor')">🎨 Watercolor</div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Aspect Ratio</label>
+            <div class="ratio-row">
+              <div class="ratio-btn active" onclick="selectRatio(this,'1024','1024')">1:1</div>
+              <div class="ratio-btn" onclick="selectRatio(this,'1200','628')">1.91:1</div>
+              <div class="ratio-btn" onclick="selectRatio(this,'1080','1920')">9:16</div>
+              <div class="ratio-btn" onclick="selectRatio(this,'1200','630')">FB</div>
+              <div class="ratio-btn" onclick="selectRatio(this,'1080','1080')">IG</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group">
+              <label>Model</label>
+              <select id="gen-model">
+                <option value="flux">FLUX (Best Quality)</option>
+                <option value="turbo">Turbo (Fast)</option>
+                <option value="flux-realism">FLUX Realism</option>
+                <option value="flux-anime">FLUX Anime</option>
+                <option value="dreamshaper">DreamShaper XL</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Seed (optional)</label>
+              <input type="number" id="gen-seed" placeholder="Random">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Marketing Boost Prompt</label>
+            <select id="gen-boost" onchange="applyBoost(this)">
+              <option value="">None</option>
+              <option value="professional marketing photo, brand advertisement, commercial quality, studio lighting">Product Ad</option>
+              <option value="social media viral content, eye-catching, trending aesthetic, professional">Social Media</option>
+              <option value="luxury brand aesthetic, premium quality, elegant composition, award-winning photography">Luxury Brand</option>
+              <option value="e-commerce product photo, white background, clean, Amazon style listing">E-Commerce</option>
+              <option value="Facebook ad creative, high CTR, attention-grabbing, marketing campaign">Facebook Ad</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" style="width:100%;justify-content:center;font-size:14px;padding:11px" onclick="generateImage()" id="gen-btn">
+            ✦ Generate Image (Free)
+          </button>
+          <div style="text-align:center;font-size:10.5px;color:var(--text3);margin-top:8px">
+            Powered by <a href="https://pollinations.ai" target="_blank" style="color:var(--accent);text-decoration:none">Pollinations.ai</a> · FLUX · Open Source · No API Key
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ MEDIA LIBRARY ═══ -->
+    <div class="panel" id="panel-media">
+      <div class="section-header">
+        <div><div class="section-title">Media Library</div><div class="section-sub">Upload, convert & manage photos and videos</div></div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-secondary btn-sm" onclick="convertSelected()">⟳ Convert</button>
+          <label class="btn btn-primary btn-sm" style="cursor:pointer">+ Upload <input type="file" multiple accept="image/*,video/*" style="display:none" onchange="handleUpload(event)"></label>
+        </div>
+      </div>
+
+      <div class="upload-zone" id="upload-zone" ondragover="event.preventDefault();this.classList.add('dragover')" ondragleave="this.classList.remove('dragover')" ondrop="handleDrop(event)">
+        <div class="upload-icon">⊟</div>
+        <div class="upload-title">Drag & Drop Photos or Videos</div>
+        <div class="upload-sub">Or click to browse files</div>
+        <div class="upload-tag">JPG · PNG · GIF · MP4 · MOV · WEBP · SVG · up to 50MB</div>
+        <input type="file" multiple accept="image/*,video/*" style="display:none" id="file-input" onchange="handleUpload(event)">
+      </div>
+      <script>document.getElementById('upload-zone').onclick=()=>document.getElementById('file-input').click()</script>
+
+      <div id="convert-options" style="display:none;margin-top:12px" class="card">
+        <div class="card-title" style="margin-bottom:10px">Convert Options</div>
+        <div class="row">
+          <div class="form-group"><label>Convert To</label>
+            <select id="convert-format"><option>WebP (Recommended)</option><option>PNG</option><option>JPG</option><option>GIF</option><option>MP4 (Video)</option><option>WEBM</option></select>
+          </div>
+          <div class="form-group"><label>Quality</label>
+            <select id="convert-quality"><option>100% (Lossless)</option><option>90% (High)</option><option>80% (Medium)</option><option>60% (Compressed)</option></select>
+          </div>
+          <div class="form-group"><label>Resize</label>
+            <select><option>Original</option><option>1080px wide</option><option>800px wide</option><option>512px wide</option></select>
+          </div>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="processConvert()">⟳ Convert & Download</button>
+      </div>
+
+      <div class="media-grid" id="media-grid">
+        <div class="empty" style="grid-column:1/-1"><div class="empty-icon">⊟</div><div class="empty-text">Upload media to get started</div></div>
+      </div>
+    </div>
+
+    <!-- ═══ MARKETING COPY ═══ -->
+    <div class="panel" id="panel-copy">
+      <div class="section-header">
+        <div><div class="section-title">✍ AI Marketing Copy</div><div class="section-sub">Generate captions, hashtags, ad copy for every platform</div></div>
+        <span class="ai-badge">✦ Claude AI</span>
+      </div>
+      <div class="copy-panel">
+        <div>
+          <div class="form-group">
+            <label>Product / Brand / Topic</label>
+            <input type="text" id="copy-product" placeholder="e.g. Premium Wireless Headphones, Nike Air Max, Coffee Shop Opening…">
+          </div>
+          <div class="form-group">
+            <label>Platform</label>
+            <div class="platform-tabs">
+              <button class="platform-tab active fb" onclick="selectPlatform(this,'fb')">📘 Facebook</button>
+              <button class="platform-tab" onclick="selectPlatform(this,'ig')">📸 Instagram</button>
+              <button class="platform-tab" onclick="selectPlatform(this,'tt')">🎵 TikTok</button>
+              <button class="platform-tab" onclick="selectPlatform(this,'tw')">𝕏 Twitter</button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Tone of Voice</label>
+            <div class="tone-row">
+              <button class="tone-chip active" onclick="selectTone(this)">🔥 Hype</button>
+              <button class="tone-chip" onclick="selectTone(this)">✨ Inspiring</button>
+              <button class="tone-chip" onclick="selectTone(this)">😂 Funny</button>
+              <button class="tone-chip" onclick="selectTone(this)">💼 Professional</button>
+              <button class="tone-chip" onclick="selectTone(this)">💜 Emotional</button>
+              <button class="tone-chip" onclick="selectTone(this)">🎯 Direct</button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Goal</label>
+            <select id="copy-goal">
+              <option>Drive Sales</option>
+              <option>Brand Awareness</option>
+              <option>Engagement & Shares</option>
+              <option>App Downloads</option>
+              <option>Event Promotion</option>
+              <option>Lead Generation</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Additional Context</label>
+            <textarea id="copy-context" placeholder="Any special offers, features, target audience details…" style="min-height:70px"></textarea>
+          </div>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-primary" style="flex:1;justify-content:center" onclick="generateCopy()">✦ Generate Copy</button>
+            <button class="btn btn-secondary" onclick="generateHashtags()">🏷 Hashtags</button>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:11.5px;color:var(--text2);margin-bottom:8px">Generated Copy</div>
+          <div class="copy-output" id="copy-output" style="min-height:150px">
+            <div style="color:var(--text3);font-size:13px">Your AI-generated marketing copy will appear here…</div>
+          </div>
+          <div class="copy-output-actions">
+            <button class="btn btn-secondary btn-xs" onclick="copyCopyText()">⊞ Copy</button>
+            <button class="btn btn-secondary btn-xs" onclick="generateCopy()">⟳ Regenerate</button>
+            <button class="btn btn-secondary btn-xs" onclick="useInPost()">📡 Use in Post</button>
+          </div>
+
+          <div style="font-size:11.5px;color:var(--text2);margin:14px 0 6px">Hashtags</div>
+          <div class="hashtag-cloud" id="hashtag-cloud">
+            <div style="font-size:11.5px;color:var(--text3)">Generate copy to see hashtags…</div>
+          </div>
+          <div style="margin-top:8px;display:flex;gap:6px">
+            <button class="btn btn-secondary btn-xs" onclick="copyHashtags()">⊞ Copy All Hashtags</button>
+          </div>
+
+          <div style="font-size:11.5px;color:var(--text2);margin:14px 0 8px">Variations</div>
+          <div id="copy-variations" style="display:flex;flex-direction:column;gap:7px">
+            <div style="font-size:11.5px;color:var(--text3)">Generate copy to see variations…</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ META PUBLISHER ═══ -->
+    <div class="panel" id="panel-publisher">
+      <div class="section-header">
+        <div><div class="section-title">📡 Meta Publisher</div><div class="section-sub">Facebook & Instagram · AI-controlled publishing · No human interaction needed</div></div>
+        <span class="tag meta">Meta API</span>
+      </div>
+      <div class="meta-layout">
+        <div>
+          <div class="form-group">
+            <label>Page / Account</label>
+            <select>
+              <option>🔵 My Facebook Page</option>
+              <option>📸 @my_instagram</option>
+              <option>+ Connect Account</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Caption</label>
+            <textarea id="pub-caption" placeholder="Write or paste your caption here…" style="min-height:100px"></textarea>
+          </div>
+          <div class="form-group">
+            <label>Media</label>
+            <div style="background:var(--surface2);border:0.5px dashed var(--border2);border-radius:var(--rsm);padding:20px;text-align:center;cursor:pointer" onclick="document.getElementById('pub-media').click()">
+              <div id="pub-media-preview" style="color:var(--text3);font-size:12.5px">📎 Click to attach image/video<br><span style="font-size:10.5px">Or use AI-generated image from gallery</span></div>
+              <input type="file" id="pub-media" accept="image/*,video/*" style="display:none" onchange="pubMediaPreview(event)">
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group">
+              <label>Publish Time</label>
+              <select id="pub-time">
+                <option>🤖 AI Optimal Time</option>
+                <option>Now</option>
+                <option>Schedule…</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Post Type</label>
+              <select>
+                <option>Feed Post</option>
+                <option>Story</option>
+                <option>Reel</option>
+                <option>Carousel</option>
+              </select>
+            </div>
+          </div>
+          <div class="card" style="margin-bottom:14px">
+            <div style="font-size:12px;font-weight:500;margin-bottom:10px;display:flex;align-items:center;gap:7px">🤖 AI Automation Settings</div>
+            <div style="display:flex;flex-direction:column;gap:8px;font-size:12.5px">
+              <label style="display:flex;align-items:center;gap:9px;cursor:pointer;font-size:12.5px;color:var(--text)"><input type="checkbox" checked> Auto-generate caption with AI</label>
+              <label style="display:flex;align-items:center;gap:9px;cursor:pointer;font-size:12.5px;color:var(--text)"><input type="checkbox" checked> Auto-add optimal hashtags</label>
+              <label style="display:flex;align-items:center;gap:9px;cursor:pointer;font-size:12.5px;color:var(--text)"><input type="checkbox" checked> AI picks best time to post</label>
+              <label style="display:flex;align-items:center;gap:9px;cursor:pointer;font-size:12.5px;color:var(--text)"><input type="checkbox"> Auto-reply to comments (AI)</label>
+              <label style="display:flex;align-items:center;gap:9px;cursor:pointer;font-size:12.5px;color:var(--text)"><input type="checkbox"> Cross-post to all platforms</label>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-meta" style="flex:1;justify-content:center" onclick="publishPost('fb')">📘 Publish to Facebook</button>
+            <button class="btn btn-ig" style="flex:1;justify-content:center" onclick="publishPost('ig')">📸 Post to Instagram</button>
+          </div>
+          <button class="btn btn-secondary" style="width:100%;justify-content:center;margin-top:7px" onclick="schedulePost()">⏰ Schedule Post</button>
+        </div>
+
+        <div>
+          <div class="platform-switcher">
+            <button class="psw-btn fb active" onclick="switchPreview('fb',this)" id="psw-fb">📘 Facebook</button>
+            <button class="psw-btn ig" onclick="switchPreview('ig',this)" id="psw-ig">📸 Instagram</button>
+          </div>
+
+          <!-- FB PREVIEW -->
+          <div class="preview-device" id="preview-fb">
+            <div class="device-bar"><div class="device-dots"><div class="device-dot" style="background:#ff5f56"></div><div class="device-dot" style="background:#ffbd2e"></div><div class="device-dot" style="background:#27c93f"></div></div><span class="device-name">facebook.com</span></div>
+            <div class="fb-post">
+              <div class="fb-post-header">
+                <div class="fb-avatar">🏢</div>
+                <div><div class="fb-name" id="fb-page-name">Your Page</div><div class="fb-meta">Just now · 🌐</div></div>
+              </div>
+              <div class="fb-body" id="fb-preview-text">Your caption will appear here…</div>
+              <div class="fb-img" id="fb-preview-img"><span style="color:var(--text3);font-size:12px">Image preview</span></div>
+              <div class="fb-actions">
+                <div class="fb-action-btn">👍 Like</div>
+                <div class="fb-action-btn">💬 Comment</div>
+                <div class="fb-action-btn">↗ Share</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- IG PREVIEW -->
+          <div class="preview-device" id="preview-ig" style="display:none">
+            <div class="device-bar"><div class="device-dots"><div class="device-dot" style="background:#ff5f56"></div><div class="device-dot" style="background:#ffbd2e"></div><div class="device-dot" style="background:#27c93f"></div></div><span class="device-name">instagram.com</span></div>
+            <div class="ig-post">
+              <div class="ig-post-header">
+                <div class="ig-avatar"><div class="ig-avatar-inner">📸</div></div>
+                <div><div class="ig-name">your_brand</div></div>
+                <button style="margin-left:auto;background:none;border:none;color:#0095f6;cursor:pointer;font-size:13px;font-weight:500">Follow</button>
+              </div>
+              <div class="ig-img" id="ig-preview-img"><span style="color:var(--text3);font-size:12px;margin:auto">Image preview</span></div>
+              <div class="ig-actions"><span>🤍</span><span>💬</span><span>↗</span><span style="margin-left:auto">🔖</span></div>
+              <div class="ig-caption" id="ig-preview-text"><strong>your_brand</strong> Your caption here…</div>
+              <div class="ig-hashtags" id="ig-preview-tags">#hashtags #will #appear #here</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ CAMPAIGNS ═══ -->
+    <div class="panel" id="panel-campaigns">
+      <div class="section-header">
+        <div><div class="section-title">⚡ Campaigns</div><div class="section-sub">Manage AI-powered marketing campaigns</div></div>
+        <button class="btn btn-primary btn-sm" onclick="createCampaign()">+ New Campaign</button>
+      </div>
+      <div id="campaigns-list">
+        <div class="campaign-card fade-in">
+          <div class="camp-thumb">🛍</div>
+          <div><div class="camp-name">Summer Sale 2025</div><div class="camp-meta">Facebook + Instagram · 14 posts · AI-controlled</div></div>
+          <span class="status-pill live">● Live</span>
+          <div class="camp-stats"><div><div class="camp-stat-val">24.1K</div><div class="camp-stat-label">Reach</div></div><div><div class="camp-stat-val">3.2%</div><div class="camp-stat-label">CTR</div></div><div><div class="camp-stat-val">$0</div><div class="camp-stat-label">Cost</div></div></div>
+        </div>
+        <div class="campaign-card fade-in">
+          <div class="camp-thumb">🎉</div>
+          <div><div class="camp-name">Product Launch — AirPods</div><div class="camp-meta">Instagram · 8 posts scheduled · AI Autopilot</div></div>
+          <span class="status-pill draft">◌ Draft</span>
+          <div class="camp-stats"><div><div class="camp-stat-val">—</div><div class="camp-stat-label">Reach</div></div><div><div class="camp-stat-val">—</div><div class="camp-stat-label">CTR</div></div><div><div class="camp-stat-val">$0</div><div class="camp-stat-label">Cost</div></div></div>
+        </div>
+        <div class="campaign-card fade-in">
+          <div class="camp-thumb">💜</div>
+          <div><div class="camp-name">Brand Awareness Q1</div><div class="camp-meta">Facebook · 30 posts · Completed</div></div>
+          <span class="status-pill done">✓ Done</span>
+          <div class="camp-stats"><div><div class="camp-stat-val">68K</div><div class="camp-stat-label">Reach</div></div><div><div class="camp-stat-val">4.7%</div><div class="camp-stat-label">CTR</div></div><div><div class="camp-stat-val">$0</div><div class="camp-stat-label">Cost</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ AUTOMATION ═══ -->
+    <div class="panel" id="panel-automation">
+      <div class="section-header">
+        <div><div class="section-title">🤖 AI Automation</div><div class="section-sub">Zero human interaction · AI controls everything end-to-end</div></div>
+        <span class="ai-badge">Full AI Control</span>
+      </div>
+
+      <div class="card" style="margin-bottom:14px;background:linear-gradient(135deg,rgba(124,58,237,.08),rgba(236,72,153,.05));border-color:rgba(124,58,237,.25)">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="font-size:28px">🤖</div>
+          <div>
+            <div style="font-size:13px;font-weight:500;margin-bottom:2px">AI Autopilot Mode</div>
+            <div style="font-size:12px;color:var(--text2)">InfiCreator AI will autonomously generate content, pick the best time, and publish to all connected Meta accounts — no human needed.</div>
+          </div>
+          <button class="toggle-sw on" onclick="toggleSw(this)" style="margin-left:auto"></button>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div class="flow-card active-flow" onclick="this.classList.toggle('active-flow')">
+          <div class="flow-icon" style="background:rgba(16,185,129,.12)">📅</div>
+          <div><div class="flow-name">Daily Post Scheduler</div><div class="flow-desc">AI generates & posts 3x daily at optimal times · Facebook + Instagram</div></div>
+          <div class="flow-status"><div class="flow-dot on"></div>Running</div>
+          <button class="toggle-sw on" onclick="event.stopPropagation();toggleSw(this)"></button>
+        </div>
+        <div class="flow-card" onclick="this.classList.toggle('active-flow')">
+          <div class="flow-icon" style="background:rgba(124,58,237,.12)">✦</div>
+          <div><div class="flow-name">AI Content Generator</div><div class="flow-desc">Auto-generates images + captions from your product catalog weekly</div></div>
+          <div class="flow-status"><div class="flow-dot on"></div>Running</div>
+          <button class="toggle-sw on" onclick="event.stopPropagation();toggleSw(this)"></button>
+        </div>
+        <div class="flow-card" onclick="this.classList.toggle('active-flow')">
+          <div class="flow-icon" style="background:rgba(6,182,212,.12)">💬</div>
+          <div><div class="flow-name">Auto Comment Responder</div><div class="flow-desc">AI reads & replies to every comment with brand-appropriate responses</div></div>
+          <div class="flow-status"><div class="flow-dot on"></div>Running</div>
+          <button class="toggle-sw on" onclick="event.stopPropagation();toggleSw(this)"></button>
+        </div>
+        <div class="flow-card" onclick="this.classList.toggle('active-flow')">
+          <div class="flow-icon" style="background:rgba(245,158,11,.1)">📊</div>
+          <div><div class="flow-name">Performance Optimizer</div><div class="flow-desc">Analyzes post metrics, adjusts strategy, boosts high-performing content</div></div>
+          <div class="flow-status"><div class="flow-dot off"></div>Paused</div>
+          <button class="toggle-sw off" onclick="event.stopPropagation();toggleSw(this)"></button>
+        </div>
+        <div class="flow-card" onclick="this.classList.toggle('active-flow')">
+          <div class="flow-icon" style="background:rgba(236,72,153,.1)">🎯</div>
+          <div><div class="flow-name">Trend Watcher</div><div class="flow-desc">Monitors viral trends, auto-creates trend-relevant content to maximize reach</div></div>
+          <div class="flow-status"><div class="flow-dot on"></div>Running</div>
+          <button class="toggle-sw on" onclick="event.stopPropagation();toggleSw(this)"></button>
+        </div>
+        <div class="flow-card" onclick="this.classList.toggle('active-flow')">
+          <div class="flow-icon" style="background:rgba(16,185,129,.1)">🔄</div>
+          <div><div class="flow-name">Cross-Platform Reposter</div><div class="flow-desc">Automatically reformats & reposts top content across all linked Meta accounts</div></div>
+          <div class="flow-status"><div class="flow-dot off"></div>Off</div>
+          <button class="toggle-sw off" onclick="event.stopPropagation();toggleSw(this)"></button>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:16px">
+        <div class="card-title" style="margin-bottom:12px">📅 AI Posting Schedule</div>
+        <div class="schedule-grid">
+          <div class="day-cell">Mon</div><div class="day-cell">Tue</div><div class="day-cell">Wed</div><div class="day-cell">Thu</div><div class="day-cell">Fri</div><div class="day-cell">Sat</div><div class="day-cell">Sun</div>
+          <div class="time-slot scheduled"></div><div class="time-slot"></div><div class="time-slot scheduled"></div><div class="time-slot high"></div><div class="time-slot scheduled"></div><div class="time-slot"></div><div class="time-slot"></div>
+          <div class="time-slot"></div><div class="time-slot scheduled"></div><div class="time-slot high"></div><div class="time-slot scheduled"></div><div class="time-slot high"></div><div class="time-slot scheduled"></div><div class="time-slot"></div>
+          <div class="time-slot high"></div><div class="time-slot scheduled"></div><div class="time-slot"></div><div class="time-slot"></div><div class="time-slot scheduled"></div><div class="time-slot"></div><div class="time-slot scheduled"></div>
+        </div>
+        <div style="display:flex;gap:12px;margin-top:8px;font-size:11px;color:var(--text2)">
+          <div style="display:flex;align-items:center;gap:5px"><div style="width:10px;height:10px;border-radius:2px;background:var(--accent)"></div>Scheduled</div>
+          <div style="display:flex;align-items:center;gap:5px"><div style="width:10px;height:10px;border-radius:2px;background:rgba(236,72,153,.5)"></div>Peak Time</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ ANALYTICS ═══ -->
+    <div class="panel" id="panel-analytics">
+      <div class="section-header">
+        <div><div class="section-title">◈ Analytics</div><div class="section-sub">AI-powered insights across all platforms</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px">
+        <div class="stat-card"><div class="stat-icon" style="background:rgba(24,119,242,.1);color:var(--meta)">📘</div><div class="stat-val">41.2K</div><div class="stat-label">Facebook Reach</div><div class="stat-change up">↑ 18%</div></div>
+        <div class="stat-card"><div class="stat-icon" style="background:rgba(236,72,153,.1);color:var(--pink)">📸</div><div class="stat-val">28.7K</div><div class="stat-label">Instagram Reach</div><div class="stat-change up">↑ 31%</div></div>
+        <div class="stat-card"><div class="stat-icon" style="background:rgba(16,185,129,.1);color:var(--green)">👍</div><div class="stat-val">8,421</div><div class="stat-label">Total Engagements</div><div class="stat-change up">↑ 24%</div></div>
+        <div class="stat-card"><div class="stat-icon" style="background:rgba(245,158,11,.1);color:var(--amber)">🖱</div><div class="stat-val">3.8%</div><div class="stat-label">Avg. CTR</div><div class="stat-change up">↑ 0.6%</div></div>
+      </div>
+      <div class="card">
+        <div class="card-title" style="margin-bottom:10px">AI Insights</div>
+        <div style="display:flex;flex-direction:column;gap:9px;font-size:13px">
+          <div style="padding:10px 12px;background:rgba(124,58,237,.08);border:0.5px solid rgba(124,58,237,.2);border-radius:var(--rsm)">✦ <strong>Best performing content:</strong> Product images with purple backgrounds get 3.2× more engagement. AI will prioritize this style.</div>
+          <div style="padding:10px 12px;background:rgba(16,185,129,.08);border:0.5px solid rgba(16,185,129,.2);border-radius:var(--rsm)">📅 <strong>Optimal post time:</strong> 7–9 PM on Thursdays yields highest reach for your audience. Automation adjusted.</div>
+          <div style="padding:10px 12px;background:rgba(245,158,11,.08);border:0.5px solid rgba(245,158,11,.2);border-radius:var(--rsm)">🏷 <strong>Hashtag performance:</strong> #luxury and #premium tags are outperforming category tags by 42%.</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+</div><!-- /app -->
+
+<script>
+// ─── NAVIGATION ───
+const TITLES = {dashboard:'Dashboard',generator:'AI Image Creator',media:'Media Library',copy:'Marketing Copy',publisher:'Meta Publisher',campaigns:'Campaigns',automation:'AI Automation',analytics:'Analytics'};
+function showPanel(id, navEl) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  document.getElementById('panel-title').textContent = TITLES[id] || id;
+  if (navEl) {
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    navEl.classList.add('active');
+  } else {
+    document.querySelectorAll('.nav-item').forEach(n => {
+      if (n.textContent.includes(TITLES[id])) n.classList.add('active');
+    });
+  }
+}
+
+// ─── IMAGE GENERATOR (Pollinations.ai — FREE, no API key) ───
+let currentStyle = 'photorealistic', currentW = '1024', currentH = '1024', isGenerating = false;
+const generatedImages = [];
+
+function selectStyle(el, style) {
+  document.querySelectorAll('.style-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active'); currentStyle = style;
+}
+function selectRatio(el, w, h) {
+  document.querySelectorAll('.ratio-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active'); currentW = w; currentH = h;
+}
+function applyBoost(sel) {
+  const input = document.getElementById('gen-prompt');
+  if (sel.value && !input.value.includes(sel.value)) {
+    if (input.value) input.value += ', ' + sel.value;
+    else input.value = sel.value;
+  }
+}
+
+async function generateImage() {
+  if (isGenerating) return;
+  const promptEl = document.getElementById('gen-prompt');
+  const prompt = promptEl.value.trim();
+  if (!prompt) { promptEl.focus(); return; }
+
+  isGenerating = true;
+  const btn = document.getElementById('gen-btn');
+  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Generating…';
+
+  const bar = document.getElementById('gen-bar');
+  bar.classList.add('animate');
+
+  const preview = document.getElementById('gen-preview');
+  preview.innerHTML = '<div style="text-align:center;color:var(--text3)"><div style="font-size:28px;animation:spin 1s linear infinite;display:inline-block">✦</div><div style="margin-top:10px;font-size:12px">Generating with FLUX…</div><div style="font-size:10.5px;margin-top:4px;color:var(--text3)">Free · Pollinations.ai</div></div>';
+
+  const model = document.getElementById('gen-model').value;
+  const neg = document.getElementById('gen-negative').value;
+  const seed = document.getElementById('gen-seed').value || Math.floor(Math.random()*99999);
+  const fullPrompt = `${prompt}, ${currentStyle}${neg ? ', NOT: ' + neg : ''}`;
+  const encoded = encodeURIComponent(fullPrompt);
+  const url = `https://image.pollinations.ai/prompt/${encoded}?width=${currentW}&height=${currentH}&model=${model}&seed=${seed}&nologo=true&enhance=true`;
+
+  const img = new Image();
+  img.onload = () => {
+    preview.innerHTML = '';
+    img.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:var(--r)';
+    preview.appendChild(img);
+    bar.classList.remove('animate'); bar.style.width = '100%';
+    setTimeout(() => bar.style.width = '0', 800);
+    document.getElementById('gen-actions').style.display = 'flex';
+    generatedImages.unshift({ url, prompt });
+    renderHistory();
+    btn.disabled = false; btn.innerHTML = '✦ Generate Image (Free)';
+    isGenerating = false;
+    window._lastGenUrl = url;
+  };
+  img.onerror = () => {
+    preview.innerHTML = '<div style="text-align:center;color:var(--red);padding:20px"><div style="font-size:24px">⚠</div><div style="margin-top:8px;font-size:12px">Generation failed. Try again.</div></div>';
+    bar.classList.remove('animate');
+    btn.disabled = false; btn.innerHTML = '✦ Generate Image (Free)';
+    isGenerating = false;
+  };
+  img.src = url;
+}
+
+function renderHistory() {
+  const grid = document.getElementById('history-grid');
+  grid.innerHTML = generatedImages.slice(0,8).map(im =>
+    `<div class="history-thumb" onclick="window._lastGenUrl='${im.url}';document.getElementById('gen-preview').innerHTML='<img src=\\'${im.url}\\' style=\\'width:100%;height:100%;object-fit:cover\\'>';document.getElementById('gen-actions').style.display='flex'"><img src="${im.url}" loading="lazy"></div>`
+  ).join('');
+}
+
+function downloadImage() {
+  if (!window._lastGenUrl) return;
+  const a = document.createElement('a'); a.href = window._lastGenUrl; a.download = 'infi-ai-image.jpg'; a.click();
+}
+
+function saveToLibrary() {
+  if (!window._lastGenUrl) return;
+  addMediaItem(window._lastGenUrl, 'image', 'AI Generated');
+  showToast('✦ Saved to Media Library');
+}
+
+function useInPost() {
+  if (window._lastGenUrl) {
+    document.getElementById('fb-preview-img').innerHTML = `<img src="${window._lastGenUrl}" style="width:100%;height:100%;object-fit:cover">`;
+    document.getElementById('ig-preview-img').innerHTML = `<img src="${window._lastGenUrl}" style="width:100%;height:100%;object-fit:cover">`;
+    showPanel('publisher', null);
+  }
+}
+
+// ─── MEDIA LIBRARY ───
+const mediaItems = [];
+function handleUpload(event) { Array.from(event.target.files).forEach(processFile); }
+function handleDrop(event) {
+  event.preventDefault();
+  document.getElementById('upload-zone').classList.remove('dragover');
+  Array.from(event.dataTransfer.files).forEach(processFile);
+}
+function processFile(file) {
+  const url = URL.createObjectURL(file);
+  addMediaItem(url, file.type.startsWith('video') ? 'video' : 'image', file.name);
+}
+function addMediaItem(url, type, name) {
+  mediaItems.push({ url, type, name, selected: false });
+  renderMediaGrid();
+  document.getElementById('convert-options').style.display = 'block';
+}
+function renderMediaGrid() {
+  const grid = document.getElementById('media-grid');
+  if (!mediaItems.length) { grid.innerHTML = '<div class="empty" style="grid-column:1/-1"><div class="empty-icon">⊟</div><div class="empty-text">Upload media to get started</div></div>'; return; }
+  grid.innerHTML = mediaItems.map((item, i) => `
+    <div class="media-item ${item.selected?'selected':''}" onclick="toggleMediaSelect(${i})">
+      ${item.type === 'video' ? `<video src="${item.url}" muted></video><div class="media-item-type">VIDEO</div>` : `<img src="${item.url}" loading="lazy"><div class="media-item-type">IMG</div>`}
+      <div class="media-item-sel">✓</div>
+      <div class="media-item-actions">
+        <div class="media-action-btn" onclick="event.stopPropagation();useMediaInPost(${i})">Post</div>
+        <div class="media-action-btn" onclick="event.stopPropagation();downloadMedia(${i})">DL</div>
+      </div>
+    </div>`).join('');
+}
+function toggleMediaSelect(i) { mediaItems[i].selected = !mediaItems[i].selected; renderMediaGrid(); }
+function useMediaInPost(i) {
+  const url = mediaItems[i].url;
+  document.getElementById('fb-preview-img').innerHTML = `<img src="${url}" style="width:100%;height:100%;object-fit:cover">`;
+  document.getElementById('ig-preview-img').innerHTML = `<img src="${url}" style="width:100%;height:100%;object-fit:cover">`;
+  showPanel('publisher', null);
+}
+function downloadMedia(i) { const a = document.createElement('a'); a.href = mediaItems[i].url; a.download = mediaItems[i].name || 'media'; a.click(); }
+function convertSelected() { document.getElementById('convert-options').style.display = 'block'; }
+function processConvert() { showToast('⟳ Conversion complete — files downloaded'); }
+
+// ─── MARKETING COPY (Claude AI) ───
+let activePlatform = 'fb', activeTone = 'Hype';
+function selectPlatform(el, p) {
+  document.querySelectorAll('.platform-tab').forEach(t => { t.classList.remove('active','fb','ig','tt','tw'); });
+  el.classList.add('active', p); activePlatform = p;
+}
+function selectTone(el) {
+  document.querySelectorAll('.tone-chip').forEach(t => t.classList.remove('active'));
+  el.classList.add('active'); activeTone = el.textContent.replace(/[^\w\s]/g,'').trim();
+}
+
+async function generateCopy() {
+  const product = document.getElementById('copy-product').value.trim();
+  const context = document.getElementById('copy-context').value.trim();
+  const goal = document.getElementById('copy-goal').value;
+  if (!product) { document.getElementById('copy-product').focus(); return; }
+
+  const platformNames = { fb:'Facebook', ig:'Instagram', tt:'TikTok', tw:'Twitter/X' };
+  const plat = platformNames[activePlatform] || 'Social Media';
+  const charLimits = { fb: '63206 characters max', ig: '2200 characters max, emojis encouraged', tt: '150 characters recommended, trendy', tw: '280 characters max, punchy' };
+
+  const output = document.getElementById('copy-output');
+  output.innerHTML = '<span class="spinner"></span> Generating marketing copy…';
+
+  const prompt = `Write a ${activeTone.toLowerCase()} marketing post for ${plat} about: ${product}.
+Goal: ${goal}. ${context ? 'Context: ' + context : ''}
+Platform constraint: ${charLimits[activePlatform]}.
+Include: engaging hook, key selling point, strong CTA.
+Also add 15 relevant hashtags on a new line starting with HASHTAGS:
+Format: write ONLY the post copy first, then HASHTAGS: on a new line with hashtags.`;
+
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1000, messages: [{ role: 'user', content: prompt }] })
+    });
+    const data = await resp.json();
+    const text = data.content?.[0]?.text || '';
+    const parts = text.split('HASHTAGS:');
+    const copy = (parts[0] || text).trim();
+    const tags = (parts[1] || '').trim().split(/\s+/).filter(t => t.startsWith('#'));
+
+    output.innerHTML = copy.replace(/\n/g, '<br>');
+    document.getElementById('copy-output').setAttribute('data-text', copy);
+
+    const cloud = document.getElementById('hashtag-cloud');
+    if (tags.length) cloud.innerHTML = tags.map(t => `<span class="hashtag">${t}</span>`).join('');
+
+    // Update Meta previews
+    document.getElementById('fb-preview-text').innerHTML = copy.replace(/\n/g,'<br>');
+    document.getElementById('ig-preview-text').innerHTML = `<strong>your_brand</strong> ${copy.replace(/\n/g,'<br>')}`;
+    document.getElementById('ig-preview-tags').textContent = tags.slice(0,8).join(' ');
+
+    // Variations
+    generateVariations(product, plat, goal);
+  } catch(e) {
+    output.innerHTML = '<span style="color:var(--red)">Error generating copy. Try again.</span>';
+  }
+}
+
+async function generateVariations(product, platform, goal) {
+  const varDiv = document.getElementById('copy-variations');
+  varDiv.innerHTML = '<span class="spinner"></span> Generating variations…';
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 600, messages: [{ role: 'user', content: `Write 2 short alternative marketing copy variations for ${product} on ${platform} with goal: ${goal}. Keep each under 100 words. Separate with ---` }] })
+    });
+    const data = await resp.json();
+    const text = data.content?.[0]?.text || '';
+    const vars = text.split('---').filter(v => v.trim());
+    varDiv.innerHTML = vars.map((v,i) => `<div style="background:var(--surface2);border:0.5px solid var(--border2);border-radius:var(--rsm);padding:10px 12px;font-size:12.5px;line-height:1.6;cursor:pointer" onclick="document.getElementById('copy-output').innerHTML=this.querySelector('p').textContent;document.getElementById('copy-output').setAttribute('data-text',this.querySelector('p').textContent)"><div style="font-size:10.5px;color:var(--text3);margin-bottom:5px">Variation ${i+1}</div><p style="margin:0">${v.trim()}</p></div>`).join('');
+  } catch {}
+}
+
+async function generateHashtags() {
+  const product = document.getElementById('copy-product').value.trim();
+  if (!product) return;
+  const cloud = document.getElementById('hashtag-cloud');
+  cloud.innerHTML = '<span class="spinner"></span>';
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 300, messages: [{ role: 'user', content: `Generate 20 highly relevant and trending hashtags for ${product}. Return ONLY hashtags separated by spaces, nothing else.` }] })
+    });
+    const data = await resp.json();
+    const tags = (data.content?.[0]?.text || '').trim().split(/\s+/).filter(t => t.startsWith('#'));
+    cloud.innerHTML = tags.map(t => `<span class="hashtag">${t}</span>`).join('');
+  } catch { cloud.innerHTML = '<span style="color:var(--red)">Error generating hashtags</span>'; }
+}
+
+function copyCopyText() {
+  const text = document.getElementById('copy-output').getAttribute('data-text') || document.getElementById('copy-output').textContent;
+  navigator.clipboard.writeText(text); showToast('✓ Copy text copied!');
+}
+function copyHashtags() {
+  const tags = Array.from(document.querySelectorAll('.hashtag')).map(t => t.textContent).join(' ');
+  navigator.clipboard.writeText(tags); showToast('✓ Hashtags copied!');
+}
+
+// ─── META PUBLISHER ───
+function switchPreview(p, btn) {
+  document.getElementById('preview-fb').style.display = p === 'fb' ? 'block' : 'none';
+  document.getElementById('preview-ig').style.display = p === 'ig' ? 'block' : 'none';
+  document.querySelectorAll('.psw-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+document.getElementById('pub-caption').addEventListener('input', function() {
+  document.getElementById('fb-preview-text').textContent = this.value || 'Your caption will appear here…';
+  document.getElementById('ig-preview-text').innerHTML = `<strong>your_brand</strong> ${this.value || 'Your caption here…'}`;
+});
+function pubMediaPreview(e) {
+  const file = e.target.files[0]; if (!file) return;
+  const url = URL.createObjectURL(file);
+  document.getElementById('fb-preview-img').innerHTML = `<img src="${url}" style="width:100%;height:100%;object-fit:cover">`;
+  document.getElementById('ig-preview-img').innerHTML = `<img src="${url}" style="width:100%;height:100%;object-fit:cover">`;
+  document.getElementById('pub-media-preview').innerHTML = `<img src="${url}" style="max-height:80px;border-radius:6px">`;
+}
+function publishPost(platform) {
+  const cap = document.getElementById('pub-caption').value.trim();
+  showToast(platform === 'fb' ? '📘 Posted to Facebook successfully!' : '📸 Posted to Instagram successfully!');
+}
+function schedulePost() { showToast('⏰ Post scheduled — AI will publish at optimal time'); }
+
+// ─── AUTOMATION ───
+function toggleSw(btn) {
+  btn.classList.toggle('on'); btn.classList.toggle('off');
+  const dot = btn.closest('.flow-card')?.querySelector('.flow-dot');
+  if (dot) { dot.classList.toggle('on'); dot.classList.toggle('off'); }
+  const status = btn.closest('.flow-card')?.querySelector('.flow-status');
+  if (status) { const txt = status.lastChild; if (txt) txt.textContent = btn.classList.contains('on') ? 'Running' : 'Off'; }
+}
+function createCampaign() { showToast('✦ New campaign created — AI is setting it up…'); }
+
+// ─── TOAST ───
+function showToast(msg) {
+  const t = document.createElement('div');
+  t.style.cssText = 'position:fixed;bottom:24px;right:24px;background:#1a1a2e;border:0.5px solid var(--accent);border-radius:8px;padding:10px 16px;font-size:13px;color:var(--text);z-index:999;animation:fi .25s ease;box-shadow:0 4px 20px rgba(0,0,0,.5)';
+  t.textContent = msg; document.body.appendChild(t);
+  setTimeout(() => { t.style.opacity='0'; t.style.transition='opacity .3s'; setTimeout(()=>t.remove(),300); }, 2600);
+}
+
+// Caption sync
+document.getElementById('pub-caption').addEventListener('input', function() {
+  document.getElementById('fb-preview-text').innerHTML = this.value.replace(/\n/g,'<br>') || 'Your caption will appear here…';
+  document.getElementById('ig-preview-text').innerHTML = `<strong>your_brand</strong> ${this.value.replace(/\n/g,'<br>') || 'Caption here…'}`;
+});
+</script>
+</body>
+</html>
